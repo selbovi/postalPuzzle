@@ -3,12 +3,14 @@ package com.selbovi;
 import com.google.common.collect.Collections2;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Puzzle {
     public static void main(String[] args) {
-        go(System.in);
+        String result = go(System.in);
+        System.out.print(result);
     }
 
     public static String go(InputStream in) {
@@ -47,7 +49,7 @@ public class Puzzle {
             i++;
         }
 
-        return sb.toString().trim();
+        return sb.toString();
     }
 
     public static String go(int caseNum, List<String> tokensA, List<String> tokensB) {
@@ -183,7 +185,7 @@ public class Puzzle {
         bStack.clear();
     }
 
-    private static class PuzzleComparator implements Comparator<String> {
+    private static class PuzzleComparator implements Comparator<String>, Serializable {
 
         @Override
         public int compare(String o1, String o2) {

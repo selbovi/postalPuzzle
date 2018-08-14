@@ -18,7 +18,7 @@ public class PuzzleTest {
         //when:
         String result = Puzzle.go(is);
         //then:
-        assertTrue(result.endsWith(": dearalanhowareyou"));
+        assertTrue(result.contains(": dearalanhowareyou"));
 
     }
 
@@ -31,7 +31,7 @@ public class PuzzleTest {
         //when:
         String result = Puzzle.go(is);
         //then:
-        assertTrue(result.endsWith(": ienjoycorresponding"));
+        assertTrue(result.contains(": ienjoycorresponding"));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class PuzzleTest {
         //when:
         String result = Puzzle.go(is);
         //then:
-        assertTrue(result.endsWith(": abcd"));
+        assertTrue(result.contains(": abcd"));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class PuzzleTest {
         //when:
         String result = Puzzle.go(is);
         //then:
-        assertTrue(result.endsWith(": IMPOSSIBLE"));
+        assertTrue(result.contains(": IMPOSSIBLE"));
 
     }
 
