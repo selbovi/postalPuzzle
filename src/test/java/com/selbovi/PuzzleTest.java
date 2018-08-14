@@ -23,7 +23,7 @@ public class PuzzleTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     public void testCase2() throws InterruptedException {
         //Thread.sleep(40000);
         //given:

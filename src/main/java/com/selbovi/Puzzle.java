@@ -3,11 +3,7 @@ package com.selbovi;
 import com.google.common.collect.Collections2;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Puzzle {
@@ -71,20 +67,27 @@ public class Puzzle {
         List<String> bStack = new ArrayList<>();
         int count = 0;
         for (List<Integer> permutation1 : permutations) {
-            for (List<Integer> permutation2 : permutations) {
-                if (allow(permutation1, tokensA, permutation2, tokensB)) {
-                    calculateSequences(
-                            tokensA, permutation1,
-                            tokensB, permutation2,
-                            aStack, bStack, resList
-                    );
-                    count++;
-                }
+            if (allow(permutation1, tokensA, permutation1, tokensB)) {
+                calculateSequences(
+                        tokensA, permutation1,
+                        tokensB, permutation1,
+                        aStack, bStack, resList
+                );
+                count++;
             }
         }
         System.err.println("count = " + count);
-        //TODO
-        return "Case " + caseNum + ": " + (resList.size() > 0 ? resList.get(0) : "IMPOSSIBLE");
+
+        return "Case " + caseNum + ": " + chooseResult(resList);
+    }
+
+    public static String chooseResult(List<String> resList) {
+        if (resList.size() == 0) {
+            return "IMPOSSIBLE";
+        }
+        resList.sort(new PuzzleComparator());
+
+        return resList.get(0);
     }
 
     private static boolean allow(
@@ -178,5 +181,20 @@ public class Puzzle {
         }
         aStack.clear();
         bStack.clear();
+    }
+
+    private static class PuzzleComparator implements Comparator<String> {
+
+        @Override
+        public int compare(String o1, String o2) {
+            int length1 = o1.length();
+            int length2 = o2.length();
+
+            int compare = Integer.compare(length1, length2);
+            if (compare == 0) {
+                return o1.compareTo(o2);
+            }
+            return compare;
+        }
     }
 }
