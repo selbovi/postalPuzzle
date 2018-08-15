@@ -1,6 +1,5 @@
 package com.selbovi;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -23,7 +22,6 @@ public class PuzzleTest {
     }
 
     @Test
-    //@Ignore
     public void testCase2() throws InterruptedException {
         //Thread.sleep(40000);
         //given:

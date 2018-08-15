@@ -1,10 +1,13 @@
 package com.selbovi;
 
-import com.google.common.collect.Collections2;
-
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Puzzle {
@@ -106,12 +109,25 @@ public class Puzzle {
         return s.startsWith(s1) || s1.startsWith(s);
     }
 
-    private static Collection<List<Integer>> getPossibleInts(List<Integer> words) {
-        //TODO for performance
-        Collection<List<Integer>> permutations = Collections2.permutations(words);
-        return permutations;
-    }
 
+    public static List<List<Integer>> getPossibleInts(List<Integer> original) {
+        if (original.size() == 0) {
+            List<List<Integer>> result = new ArrayList<List<Integer>>();
+            result.add(new ArrayList<Integer>());
+            return result;
+        }
+        Integer firstElement = original.remove(0);
+        List<List<Integer>> returnValue = new ArrayList<>();
+        List<List<Integer>> permutations = getPossibleInts(original);
+        for (List<Integer> smallerPermutated : permutations) {
+            for (int index = 0; index <= smallerPermutated.size(); index++) {
+                List<Integer> temp = new ArrayList<>(smallerPermutated);
+                temp.add(index, firstElement);
+                returnValue.add(temp);
+            }
+        }
+        return returnValue;
+    }
 
     static Integer numberOrNot(String input) {
         try {
