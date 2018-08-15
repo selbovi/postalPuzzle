@@ -5,13 +5,14 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertTrue;
 
 public class PuzzleTest {
 
     @Test
-    public void testCase1() {
+    public void testCase1() throws ExecutionException, InterruptedException {
         //given:
         InputStream is = getCase1Input();
         //when:
@@ -22,7 +23,7 @@ public class PuzzleTest {
     }
 
     @Test
-    public void testCase2() throws InterruptedException {
+    public void testCase2() throws InterruptedException, ExecutionException {
         //Thread.sleep(40000);
         //given:
         InputStream is = getCase2Input();
@@ -33,7 +34,7 @@ public class PuzzleTest {
     }
 
     @Test
-    public void testCase3() {
+    public void testCase3() throws ExecutionException, InterruptedException {
         //given:
         InputStream is = getCase3Input();
         //when:
@@ -43,7 +44,7 @@ public class PuzzleTest {
     }
 
     @Test
-    public void testCase4() {
+    public void testCase4() throws ExecutionException, InterruptedException {
         //given:
         InputStream is = getCase4Input();
         //when:
