@@ -1,6 +1,11 @@
 package com.selbovi;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +13,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 public class Puzzle {
@@ -210,6 +216,47 @@ public class Puzzle {
                 return o1.compareTo(o2);
             }
             return compare;
+        }
+    }
+
+    private static class Kattio extends PrintWriter {
+
+        public Kattio(InputStream i) {
+            super(new BufferedOutputStream(System.out));
+            r = new BufferedReader(new InputStreamReader(i));
+        }
+
+        public boolean hasMoreTokens() {
+            return peekToken() != null;
+        }
+
+        public String getWord() {
+            return nextToken();
+        }
+
+        private BufferedReader r;
+        private String line;
+        private StringTokenizer st;
+        private String token;
+
+        private String peekToken() {
+            if (token == null)
+                try {
+                    while (st == null || !st.hasMoreTokens()) {
+                        line = r.readLine();
+                        if (line == null) return null;
+                        st = new StringTokenizer(line);
+                    }
+                    token = st.nextToken();
+                } catch (IOException e) {
+                }
+            return token;
+        }
+
+        private String nextToken() {
+            String ans = peekToken();
+            token = null;
+            return ans;
         }
     }
 }
