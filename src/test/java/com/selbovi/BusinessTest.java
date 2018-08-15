@@ -20,8 +20,7 @@ public class BusinessTest {
         List<String> resSet = new ArrayList<>();
 
         Puzzle.calculateSequences(
-                aList, IntStream.rangeClosed(0, aList.size()).boxed().collect(Collectors.toList()),
-                bList, IntStream.rangeClosed(0, bList.size()).boxed().collect(Collectors.toList()),
+                aList, bList, IntStream.rangeClosed(0, bList.size()).boxed().collect(Collectors.toList()),
                 new ArrayList<>(), new ArrayList<>(), resSet
         );
 
@@ -35,8 +34,7 @@ public class BusinessTest {
         List<String> resSet = new ArrayList<>();
 
         Puzzle.calculateSequences(
-                aList, IntStream.rangeClosed(0, aList.size()).boxed().collect(Collectors.toList()),
-                bList, IntStream.rangeClosed(0, bList.size()).boxed().collect(Collectors.toList()),
+                aList, bList, IntStream.rangeClosed(0, bList.size()).boxed().collect(Collectors.toList()),
                 new ArrayList<>(), new ArrayList<>(), resSet
         );
 
@@ -50,8 +48,7 @@ public class BusinessTest {
         List<String> resSet = new ArrayList<>();
 
         Puzzle.calculateSequences(
-                aList, IntStream.rangeClosed(0, aList.size()).boxed().collect(Collectors.toList()),
-                bList, IntStream.rangeClosed(0, bList.size()).boxed().collect(Collectors.toList()),
+                aList, bList, IntStream.rangeClosed(0, bList.size()).boxed().collect(Collectors.toList()),
                 new ArrayList<>(), new ArrayList<>(), resSet
         );
 
@@ -65,8 +62,8 @@ public class BusinessTest {
         List<String> resSet = new ArrayList<>();
 
         Puzzle.calculateSequences(
-                aList, IntStream.rangeClosed(0, aList.size()).boxed().collect(Collectors.toList()),
-                bList, IntStream.rangeClosed(0, bList.size()).boxed().collect(Collectors.toList()),
+                aList, bList,
+                IntStream.rangeClosed(0, bList.size()).boxed().collect(Collectors.toList()),
                 new ArrayList<>(), new ArrayList<>(), resSet
         );
 

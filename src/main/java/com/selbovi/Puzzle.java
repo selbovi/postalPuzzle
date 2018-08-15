@@ -71,12 +71,11 @@ public class Puzzle {
         List<String> aStack = new ArrayList<>();
         List<String> bStack = new ArrayList<>();
         int count = 0;
-        for (List<Integer> permutation1 : permutations) {
-            if (allow(permutation1, tokensA, permutation1, tokensB)) {
+        for (List<Integer> permutation : permutations) {
+            if (allow(permutation, tokensA, tokensB)) {
                 calculateSequences(
-                        tokensA, permutation1,
-                        tokensB, permutation1,
-                        aStack, bStack, resList
+                        tokensA, tokensB,
+                        permutation, aStack, bStack, resList
                 );
                 count++;
             }
@@ -96,16 +95,14 @@ public class Puzzle {
     }
 
     private static boolean allow(
-            List<Integer> permutation1,
+            List<Integer> permutation,
             List<String> aList,
-            List<Integer> permutation2,
             List<String> bList
     ) {
-        Integer a = permutation1.get(0);
-        Integer b = permutation2.get(0);
+        Integer ind = permutation.get(0);
 
-        String s = aList.get(a);
-        String s1 = bList.get(b);
+        String s = aList.get(ind);
+        String s1 = bList.get(ind);
         return s.startsWith(s1) || s1.startsWith(s);
     }
 
@@ -139,9 +136,8 @@ public class Puzzle {
 
     public static void calculateSequences(
             List<String> aList,
-            List<Integer> permutation1,
             List<String> bList,
-            List<Integer> permutation2,
+            List<Integer> permutation,
             List<String> aStack,
             List<String> bStack,
             List<String> resSet
@@ -151,8 +147,9 @@ public class Puzzle {
         String lastStrA = "";
         String lastStrB = "";
         for (int i = 0; i < aList.size(); i++) {
-            String a = aList.get(permutation1.get(i));
-            String b = bList.get(permutation2.get(i));
+            Integer index = permutation.get(i);
+            String a = aList.get(index);
+            String b = bList.get(index);
 
             if (!a.equals(b)) {
                 String left = lastStrA.concat(a);
