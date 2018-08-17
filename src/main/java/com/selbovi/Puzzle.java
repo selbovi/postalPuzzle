@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -80,7 +81,7 @@ public class Puzzle {
             ints.add(i);
         }
 
-        Collection<List<Integer>> permutations = getPossibleInts(ints);
+        Collection<List<Integer>> permutations = getPossibleInts(ints, tokensA, tokensB);
         System.err.println(tokensA);
         System.err.println(tokensB);
         System.err.println("permutations.size: " + permutations.size());
@@ -91,7 +92,7 @@ public class Puzzle {
         List<String> bStack = new ArrayList<>();
         int count = 0;
         for (List<Integer> permutation : permutations) {
-            if (allow(permutation, tokensA, tokensB)) {
+            if (allow(permutation.get(0), tokensA, tokensB)) {
                 calculateSequences(
                         tokensA, tokensB,
                         permutation, aStack, bStack, resList
@@ -114,35 +115,61 @@ public class Puzzle {
     }
 
     private static boolean allow(
-            List<Integer> permutation,
+            Integer ind,
             List<String> aList,
             List<String> bList
     ) {
-        Integer ind = permutation.get(0);
-
         String s = aList.get(ind);
         String s1 = bList.get(ind);
         return s.startsWith(s1) || s1.startsWith(s);
     }
 
 
-    public static List<List<Integer>> getPossibleInts(List<Integer> original) {
-        if (original.size() == 0) {
-            List<List<Integer>> result = new ArrayList<List<Integer>>();
-            result.add(new ArrayList<Integer>());
-            return result;
-        }
-        Integer firstElement = original.remove(0);
+    public static List<List<Integer>> getPossibleInts(List<Integer> original, List<String> tokensA, List<String> tokensB) {
         List<List<Integer>> returnValue = new ArrayList<>();
-        List<List<Integer>> permutations = getPossibleInts(original);
-        for (List<Integer> smallerPermutated : permutations) {
-            for (int index = 0; index <= smallerPermutated.size(); index++) {
-                List<Integer> temp = new ArrayList<>(smallerPermutated);
-                temp.add(index, firstElement);
-                returnValue.add(temp);
+        Integer[] elements = original.toArray(new Integer[original.size()]);
+        int n = original.size();
+        int[] c = new int[n];
+        Arrays.fill(c, 0);
+        returnValue.add(yield(elements));
+        int i = 0;
+        while (i < n) {
+            if (c[i] < i) {
+                if (i % 2 == 0) {
+                    swap(elements, 0, i);
+                } else {
+                    swap(elements, c[i], i);
+                }
+                if (allow(elements[0], tokensA, tokensB)) {
+
+                    returnValue.add(yield(elements));
+                }
+                c[i] = c[i] + 1;
+                i = 0;
+            } else {
+                c[i] = 0;
+                i++;
             }
         }
+
         return returnValue;
+    }
+
+    private static void swap(Integer[] elements, int i, int j) {
+        Integer temp = elements[i];
+        elements[i] = elements[j];
+        elements[j] = temp;
+    }
+
+    private static List<Integer> yield(Integer[] elements) {
+        ArrayList<Integer> list = new ArrayList<>(elements.length);
+
+        for (int i = 0; i < elements.length; i++) {
+            list.add(elements[i]);
+
+        }
+
+        return list;
     }
 
     static Integer numberOrNot(String input) {
