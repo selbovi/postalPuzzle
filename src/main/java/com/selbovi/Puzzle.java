@@ -14,20 +14,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class Puzzle {
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         String result = go(System.in);
         System.out.print(result);
     }
 
-    public static String go(InputStream in) throws ExecutionException, InterruptedException {
+    public static String go(InputStream in) throws InterruptedException {
         Kattio reader = new Kattio(in);
 
         LinkedHashMap<List<String>, List<String>> map = new LinkedHashMap<>();
@@ -59,36 +54,21 @@ public class Puzzle {
         return sb.toString();
     }
 
-    private static StringBuilder executeAndWaitForResult(LinkedHashMap<List<String>, List<String>> map) throws InterruptedException, ExecutionException {
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        List<Callable<String>> tasks = new ArrayList<>();
+    private static StringBuilder executeAndWaitForResult(LinkedHashMap<List<String>, List<String>> map) throws InterruptedException {
 
         int i = 1;
+        List<String> results = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<List<String>, List<String>> entry : map.entrySet()) {
-            final int caseNum = i;
-            Callable<String> callable = new Callable<String>() {
-
-                @Override
-                public String call() throws Exception {
-                    String res = go(caseNum, entry.getKey(), entry.getValue());
-                    return res;
-                }
-            };
-            i++;
-            tasks.add(callable);
-        }
-
-        List<String> results = new ArrayList<>(i);
-        List<Future<String>> futures = executorService.invokeAll(tasks);
-        for (Future<String> future : futures) {
-            String res = future.get();
+            String res = go(i, entry.getKey(), entry.getValue());
             results.add(res);
+            i++;
         }
+
 
         for (String result : results) {
             sb.append(result);
-            sb.append("\n");
+            sb.append("\r\n");
         }
 
         return sb;
