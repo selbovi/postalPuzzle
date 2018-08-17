@@ -54,6 +54,16 @@ public class PuzzleTest {
 
     }
 
+    @Test
+    public void testCase5() throws InterruptedException, ExecutionException {
+        //given:
+        InputStream is = getCase5Input();
+        //when:
+        String result = Puzzle.go(is);
+        //then:
+        assertTrue(result.contains(": ienjoycorresponding"));
+    }
+
     private InputStream getCase1Input() {
         StringBuilder builder = new StringBuilder();
         builder.append("5");
@@ -93,6 +103,40 @@ public class PuzzleTest {
         builder.append("enj njo");
         builder.append("\n");
         builder.append("or c");
+        String myString = builder.toString();
+
+        System.err.println(myString);
+
+        return new ByteArrayInputStream(StandardCharsets.UTF_8.encode(myString).array());
+    }
+
+    private InputStream getCase5Input() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("11");
+        builder.append("\n");
+        builder.append("i ie");
+        builder.append("\n");
+        builder.append("ing ding");
+        builder.append("\n");
+        builder.append("resp orres");
+        builder.append("\n");
+        builder.append("ond pon");
+        builder.append("\n");
+        builder.append("oyc y");
+        builder.append("\n");
+        builder.append("hello hi");
+        builder.append("\n");
+        builder.append("enj njo");
+        builder.append("\n");
+        builder.append("or c");
+
+        builder.append("\n");
+        builder.append("asdfgh  asdfghasdfghasdfgh");
+        builder.append("\n");
+        builder.append("ejhflhefljrhewl ejhflhefljrhewlejhflhefljrhewlejhflhefljrhewlejhflhefljrhewl");
+
+        builder.append("\n");
+        builder.append("ejhflhefljrhewl123 ejhflhefljrhewl123lejhflhefljrhewlejhflhefljrhewlejhflhefljrhewl");
         String myString = builder.toString();
 
         System.err.println(myString);
