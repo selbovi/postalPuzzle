@@ -1,20 +1,7 @@
 package com.selbovi;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Puzzle {
@@ -69,108 +56,98 @@ public class Puzzle {
 
         for (String result : results) {
             sb.append(result);
-            sb.append("\r\n");
+            sb.append("\n");
         }
 
         return sb;
     }
 
-    public static String go(int caseNum, List<String> tokensA, List<String> tokensB) {
-        List<Integer> ints = new ArrayList<>();
-        for (int i = 0; i < tokensA.size(); i++) {
-            ints.add(i);
-        }
+    public static Set<String> go2(List<String> tokensA, List<String> tokensB) {
 
-        Collection<List<Integer>> permutations = getPossibleInts(ints, tokensA, tokensB);
-        System.err.println(tokensA);
-        System.err.println(tokensB);
-        System.err.println("permutations.size: " + permutations.size());
 
-        List<String> resList = new ArrayList<>();
+        Set<String> results = new HashSet<>();
 
-        List<String> aStack = new ArrayList<>();
-        List<String> bStack = new ArrayList<>();
-        int count = 0;
-        for (List<Integer> permutation : permutations) {
-            if (allow(permutation.get(0), tokensA, tokensB)) {
-                calculateSequences(
-                        tokensA, tokensB,
-                        permutation, aStack, bStack, resList
-                );
-                count++;
+
+        List<List<String>> newseqsa = new ArrayList<>();
+        List<List<String>> newseqsb = new ArrayList<>();
+
+        int size = tokensA.size();
+        for (int i = 0; i < size; i++) {
+            String a = tokensA.get(i);
+            String b = tokensB.get(i);
+            if (a.startsWith(b) || b.startsWith(a) && !a.equals(b)) {
+                newseqsa.add(new ArrayList<>(Arrays.asList(a)));
+                newseqsb.add(new ArrayList<>(Arrays.asList(b)));
             }
         }
-        System.err.println("count = " + count);
+
+
+        while (!newseqsa.isEmpty()) {
+
+            ArrayList<List<String>> seqsa = new ArrayList<>(newseqsa);
+            ArrayList<List<String>> seqsb = new ArrayList<>(newseqsb);
+
+            newseqsa.clear();
+            newseqsb.clear();
+
+            for (int z = 0; z < seqsa.size(); z++) {
+                List<String> seqa = seqsa.get(z);
+                List<String> seqb = seqsb.get(z);
+
+                List<String> leftA = new ArrayList<>(tokensA);
+                leftA.removeAll(seqa);
+                List<String> leftB = new ArrayList<>(tokensB);
+                leftB.removeAll(seqb);
+
+                for (int j = 0; j < leftA.size(); j++) {
+                    String nextA = leftA.get(j);
+                    String nextB = leftB.get(j);
+
+                    if (nextA.equals(nextB)) continue;
+
+                    String aseq = seqa.stream().collect(Collectors.joining()) + nextA;
+                    String bseq = seqb.stream().collect(Collectors.joining()) + nextB;
+
+                    if (aseq.startsWith(bseq) || bseq.startsWith(aseq)) {
+                        if (aseq.equals(bseq)) {
+                            results.add(aseq);
+                        } else {
+                            seqa.add(nextA);
+                            seqb.add(nextB);
+
+                            newseqsa.add(seqa);
+                            newseqsb.add(seqb);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        System.err.println("results = " + results);
+        return results;
+    }
+
+    public static String go(int caseNum, List<String> tokensA, List<String> tokensB) {
+
+        System.err.println(tokensA);
+        System.err.println(tokensB);
+
+        Set<String> resList = go2(tokensA, tokensB);
 
         return "Case " + caseNum + ": " + chooseResult(resList);
     }
 
-    public static String chooseResult(List<String> resList) {
+    public static String chooseResult(Set<String> resList) {
         if (resList.size() == 0) {
             return "IMPOSSIBLE";
         }
-        resList.sort(new PuzzleComparator());
+        ArrayList<String> list = new ArrayList<>(resList);
+        list.sort(new PuzzleComparator());
 
-        return resList.get(0);
+        return list.get(0);
     }
 
-    private static boolean allow(
-            Integer ind,
-            List<String> aList,
-            List<String> bList
-    ) {
-        String s = aList.get(ind);
-        String s1 = bList.get(ind);
-        return s.startsWith(s1) || s1.startsWith(s);
-    }
-
-
-    public static List<List<Integer>> getPossibleInts(List<Integer> original, List<String> tokensA, List<String> tokensB) {
-        List<List<Integer>> returnValue = new ArrayList<>();
-        Integer[] elements = original.toArray(new Integer[original.size()]);
-        int n = original.size();
-        int[] c = new int[n];
-        Arrays.fill(c, 0);
-        returnValue.add(yield(elements));
-        int i = 0;
-        while (i < n) {
-            if (c[i] < i) {
-                if (i % 2 == 0) {
-                    swap(elements, 0, i);
-                } else {
-                    swap(elements, c[i], i);
-                }
-                if (allow(elements[0], tokensA, tokensB)) {
-
-                    returnValue.add(yield(elements));
-                }
-                c[i] = c[i] + 1;
-                i = 0;
-            } else {
-                c[i] = 0;
-                i++;
-            }
-        }
-
-        return returnValue;
-    }
-
-    private static void swap(Integer[] elements, int i, int j) {
-        Integer temp = elements[i];
-        elements[i] = elements[j];
-        elements[j] = temp;
-    }
-
-    private static List<Integer> yield(Integer[] elements) {
-        ArrayList<Integer> list = new ArrayList<>(elements.length);
-
-        for (int i = 0; i < elements.length; i++) {
-            list.add(elements[i]);
-
-        }
-
-        return list;
-    }
 
     static Integer numberOrNot(String input) {
         try {
@@ -180,69 +157,6 @@ public class Puzzle {
         return null;
     }
 
-    public static void calculateSequences(
-            List<String> aList,
-            List<String> bList,
-            List<Integer> permutation,
-            List<String> aStack,
-            List<String> bStack,
-            List<String> resSet
-    ) {
-        aStack.clear();
-        bStack.clear();
-        String lastStrA = "";
-        String lastStrB = "";
-        for (int i = 0; i < aList.size(); i++) {
-            Integer index = permutation.get(i);
-            String a = aList.get(index);
-            String b = bList.get(index);
-
-            if (!a.equals(b)) {
-                String left = lastStrA.concat(a);
-                String right = lastStrB.concat(b);
-                if (left.startsWith(right) || right.startsWith(left)) {
-                    aStack.add(a);
-                    bStack.add(b);
-                    lastStrA = left;
-                    lastStrB = right;
-                } else {
-                    calculateSequenceAndClearStacks(resSet, aStack, bStack, lastStrA, lastStrB);
-                    lastStrA = "";
-                    lastStrB = "";
-                }
-            } else {
-                calculateSequenceAndClearStacks(resSet, aStack, bStack, lastStrA, lastStrB);
-                lastStrA = "";
-                lastStrB = "";
-            }
-
-        }
-        calculateSequenceAndClearStacks(resSet, aStack, bStack, lastStrA, lastStrB);
-    }
-
-    private static void calculateSequenceAndClearStacks(
-            List<String> resSet,
-            List<String> aStack,
-            List<String> bStack,
-            String left,
-            String right
-    ) {
-        if (aStack.size() < 1) {
-            return;
-        }
-
-        while (!left.equals(right) && aStack.size() > 0) {
-            aStack.remove(aStack.size() - 1);
-            bStack.remove(bStack.size() - 1);
-            left = aStack.stream().collect(Collectors.joining());
-            right = bStack.stream().collect(Collectors.joining());
-        }
-        if (left.equals(right) && left.length() > 0) {
-            resSet.add(left);
-        }
-        aStack.clear();
-        bStack.clear();
-    }
 
     private static class PuzzleComparator implements Comparator<String>, Serializable {
 
