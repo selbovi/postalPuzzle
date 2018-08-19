@@ -5,12 +5,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Puzzle {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         String result = go(System.in);
         System.out.print(result);
     }
 
-    public static String go(InputStream in) throws InterruptedException {
+    public static String go(InputStream in) {
         Kattio reader = new Kattio(in);
 
         LinkedHashMap<List<String>, List<String>> map = new LinkedHashMap<>();
@@ -42,7 +42,7 @@ public class Puzzle {
         return sb.toString();
     }
 
-    private static StringBuilder executeAndWaitForResult(LinkedHashMap<List<String>, List<String>> map) throws InterruptedException {
+    private static StringBuilder executeAndWaitForResult(LinkedHashMap<List<String>, List<String>> map) {
 
         int i = 1;
         List<String> results = new ArrayList<>();

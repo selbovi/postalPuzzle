@@ -23,7 +23,7 @@ public class PuzzleTest {
     }
 
     @Test
-    public void testCase2() throws InterruptedException, ExecutionException {
+    public void testCase2() {
         //Thread.sleep(40000);
         //given:
         InputStream is = getCase2Input();
@@ -55,7 +55,7 @@ public class PuzzleTest {
     }
 
     @Test
-    public void testCase5() throws InterruptedException, ExecutionException {
+    public void testCase5() {
         //given:
         InputStream is = getCase5Input();
         //when:
