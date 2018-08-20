@@ -64,6 +64,26 @@ public class PuzzleTest {
         assertTrue(result.contains(": ienjoycorresponding"));
     }
 
+    @Test
+    public void testCase6() {
+        //given:
+        InputStream is = getCase6Input();
+        //when:
+        String result = Puzzle.go(is);
+        //then:
+        assertTrue(result.contains(": xxxxyxxx"));
+    }
+
+    @Test
+    public void testCase7() {
+        //given:
+        InputStream is = getCase7Input();
+        //when:
+        String result = Puzzle.go(is);
+        //then:
+        assertTrue(result.contains(": bzaa"));
+    }
+
     private InputStream getCase1Input() {
         StringBuilder builder = new StringBuilder();
         builder.append("5");
@@ -137,6 +157,60 @@ public class PuzzleTest {
 
         builder.append("\n");
         builder.append("ejhflhefljrhewl123 ejhflhefljrhewl123lejhflhefljrhewlejhflhefljrhewlejhflhefljrhewl");
+        String myString = builder.toString();
+
+        System.err.println(myString);
+
+        return new ByteArrayInputStream(StandardCharsets.UTF_8.encode(myString).array());
+    }
+
+    private InputStream getCase6Input() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("11");
+        builder.append("\n");
+        builder.append("i ie");
+        builder.append("\n");
+        builder.append("ing ding");
+        builder.append("\n");
+        builder.append("resp orres");
+        builder.append("\n");
+        builder.append("ond pon");
+        builder.append("\n");
+        builder.append("oyc y");
+        builder.append("\n");
+        builder.append("hello hi");
+        builder.append("\n");
+        builder.append("enj njo");
+        builder.append("\n");
+        builder.append("or c");
+
+        builder.append("\n");
+        builder.append("xxxx  xxxxy");
+        builder.append("\n");
+        builder.append("yxxx xxx");
+
+        builder.append("\n");
+        builder.append("ejhflhefljrhewl123 ejhflhefljrhewl123lejhflhefljrhewlejhflhefljrhewlejhflhefljrhewl");
+        String myString = builder.toString();
+
+        System.err.println(myString);
+
+        return new ByteArrayInputStream(StandardCharsets.UTF_8.encode(myString).array());
+    }
+
+    private InputStream getCase7Input() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("4");
+        builder.append("\n");
+        builder.append("b bz");
+        builder.append("\n");
+        builder.append("zaa aa");
+
+        builder.append("\n");
+        builder.append("xxxx  xxxxy");
+        builder.append("\n");
+        builder.append("yxxx xxx");
+
         String myString = builder.toString();
 
         System.err.println(myString);
