@@ -1,7 +1,21 @@
 package com.selbovi;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 public class Puzzle {
@@ -13,113 +27,90 @@ public class Puzzle {
     public static String go(InputStream in) {
         Kattio reader = new Kattio(in);
 
-        LinkedHashMap<List<String>, List<String>> map = new LinkedHashMap<>();
+        List<List<Pair>> pairsList = new ArrayList<>();
         int i = 0;
-        List<String> tokensA = null;
-        List<String> tokensB = null;
+        List<Pair> pairs = null;
         while (reader.hasMoreTokens()) {
             if (i == 0) {
                 String word = reader.getWord();
                 Integer count = numberOrNot(word);
                 if (count != null) {
                     i = count;
-                    tokensA = new ArrayList<>(count);
-                    tokensB = new ArrayList<>(count);
-                    map.put(tokensA, tokensB);
+                    pairs = new ArrayList<>(count);
+                    pairsList.add(pairs);
                     continue;
                 }
             }
             String a = reader.getWord().trim();
             String b = reader.getWord().trim();
 
-            tokensA.add(a);
-            tokensB.add(b);
+            pairs.add(new Pair(a, b));
             i--;
         }
 
-        StringBuilder sb = executeAndWaitForResult(map);
+        StringBuilder sb = executeAndWaitForResult(pairsList);
 
         return sb.toString();
     }
 
-    private static StringBuilder executeAndWaitForResult(LinkedHashMap<List<String>, List<String>> map) {
+    private static StringBuilder executeAndWaitForResult(List<List<Pair>> pairsList) {
 
         int i = 1;
-        List<String> results = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<List<String>, List<String>> entry : map.entrySet()) {
-            String res = go(i, entry.getKey(), entry.getValue());
-            results.add(res);
-            i++;
-        }
-
-
-        for (String result : results) {
-            sb.append(result);
+        for (List<Pair> pairs : pairsList) {
+            String res = go(i, pairs);
+            sb.append(res);
             sb.append("\n");
+            i++;
         }
 
         return sb;
     }
 
-    public static Set<String> go2(List<String> tokensA, List<String> tokensB) {
+    public static Set<String> go2(List<Pair> original) {
 
 
         Set<String> results = new HashSet<>();
 
+        List<List<Pair>> newPairs = new ArrayList<>();
 
-        List<List<String>> newseqsa = new ArrayList<>();
-        List<List<String>> newseqsb = new ArrayList<>();
-
-        int size = tokensA.size();
-        for (int i = 0; i < size; i++) {
-            String a = tokensA.get(i);
-            String b = tokensB.get(i);
-            if (a.startsWith(b) || b.startsWith(a) && !a.equals(b)) {
-                newseqsa.add(new ArrayList<>(Arrays.asList(a)));
-                newseqsb.add(new ArrayList<>(Arrays.asList(b)));
+        for (Pair pair : original) {
+            if (pair.getA().startsWith(pair.getB()) || pair.getB().startsWith(pair.getA()) && !pair.getA().equals(pair.getB())) {
+                newPairs.add(new ArrayList<>(Arrays.asList(pair)));
             }
         }
 
+        while (!newPairs.isEmpty()) {
 
-        while (!newseqsa.isEmpty()) {
+            List<List<Pair>> temp = new ArrayList<>(newPairs);
 
-            ArrayList<List<String>> seqsa = new ArrayList<>(newseqsa);
-            ArrayList<List<String>> seqsb = new ArrayList<>(newseqsb);
+            newPairs.clear();
 
-            newseqsa.clear();
-            newseqsb.clear();
+            for (List<Pair> pairs : temp) {
 
-            for (int z = 0; z < seqsa.size(); z++) {
-                List<String> seqa = seqsa.get(z);
-                List<String> seqb = seqsb.get(z);
+                List<Pair> leftPairs = new ArrayList<>(original);
+                leftPairs.removeAll(pairs);
 
-                List<String> leftA = new ArrayList<>(tokensA);
-                leftA.removeAll(seqa);
-                List<String> leftB = new ArrayList<>(tokensB);
-                leftB.removeAll(seqb);
-
-                for (int j = 0; j < leftA.size(); j++) {
-                    String nextA = leftA.get(j);
-                    String nextB = leftB.get(j);
+                for (Pair nextPair : leftPairs) {
+                    String nextA = nextPair.getA();
+                    String nextB = nextPair.getB();
 
                     if (nextA.equals(nextB)) continue;
 
-                    String aseq = seqa.stream().collect(Collectors.joining()) + nextA;
-                    String bseq = seqb.stream().collect(Collectors.joining()) + nextB;
+                    String aseq = pairs.stream().map(Pair::getA).collect(Collectors.joining()) + nextA;
+                    String bseq = pairs.stream().map(Pair::getB).collect(Collectors.joining()) + nextB;
 
                     if (aseq.startsWith(bseq) || bseq.startsWith(aseq)) {
                         if (aseq.equals(bseq)) {
                             results.add(aseq);
                         } else {
-                            seqa.add(nextA);
-                            seqb.add(nextB);
+                            pairs.add(nextPair);
 
-                            newseqsa.add(seqa);
-                            newseqsb.add(seqb);
+                            newPairs.add(pairs);
                         }
                     }
                 }
+
             }
 
         }
@@ -128,12 +119,61 @@ public class Puzzle {
         return results;
     }
 
-    public static String go(int caseNum, List<String> tokensA, List<String> tokensB) {
+    public static class Pair implements Map.Entry<String, String> {
 
-        System.err.println(tokensA);
-        System.err.println(tokensB);
+        private String a;
+        private String b;
 
-        Set<String> resList = go2(tokensA, tokensB);
+        public Pair(String a, String b) {
+            this.a = a;
+            this.b = b;
+        }
+
+        @Override
+        public String getKey() {
+            return a;
+        }
+
+        @Override
+        public String getValue() {
+            return b;
+        }
+
+        public String getA() {
+            return getKey();
+        }
+
+        public String getB() {
+            return getValue();
+        }
+
+        @Override
+        public String setValue(String value) {
+            b = value;
+            return getA();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Pair pair = (Pair) o;
+            return Objects.equals(a, pair.a) &&
+                    Objects.equals(b, pair.b);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(a, b);
+        }
+    }
+
+    public static String go(int caseNum, List<Pair> pairs) {
+
+       /* System.err.println(tokensA);
+        System.err.println(tokensB);*/
+
+        Set<String> resList = go2(pairs);
 
         return "Case " + caseNum + ": " + chooseResult(resList);
     }
