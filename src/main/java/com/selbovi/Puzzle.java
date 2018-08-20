@@ -50,7 +50,11 @@ public class Puzzle {
 
         StringBuilder sb = executeAndWaitForResult(pairsList);
 
-        return sb.toString();
+        String result = sb.toString();
+
+        System.err.println("result = " + result);
+
+        return result;
     }
 
     private static StringBuilder executeAndWaitForResult(List<List<Pair>> pairsList) {
@@ -75,8 +79,10 @@ public class Puzzle {
         List<List<Pair>> newPairs = new ArrayList<>();
 
         for (Pair pair : original) {
-            if (pair.getA().startsWith(pair.getB()) || pair.getB().startsWith(pair.getA()) && !pair.getA().equals(pair.getB())) {
-                newPairs.add(new ArrayList<>(Arrays.asList(pair)));
+            if (pair.getA().startsWith(pair.getB()) || pair.getB().startsWith(pair.getA()) ) {
+                if (!pair.getA().equals(pair.getB())) {
+                    newPairs.add(new ArrayList<>(Arrays.asList(pair)));
+                }
             }
         }
 

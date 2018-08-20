@@ -19,8 +19,8 @@ public class BusinessTest {
 
         Set<String> set = Puzzle.go2(toPairs(aList, bList));
 
-        assertTrue(set.contains("abcd"));
-        ;
+        assertTrue(set.contains("abcd") && set.size() == 1);
+
     }
 
     @Test
