@@ -125,4 +125,17 @@ public class BusinessTest {
         }
         return res;
     }
+
+    @Test
+    public void resultTestCaseCrack() {
+        List<String> aList = Arrays.asList("is", "a", "sample", "part", "created", "by", "who", "are");
+        List<String> bList = Arrays.asList("i", "sa", "samp", "lepar", "tcreat", "edby", "w", "hoare");
+
+        Set<String> set = Puzzle.go2(toPairs(aList, bList));
+
+        assertTrue(set.contains(aList.stream().collect(Collectors.joining())));
+        assertTrue(set.contains("isa"));
+        assertTrue(set.contains("whoare"));
+
+    }
 }

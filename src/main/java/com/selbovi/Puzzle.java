@@ -64,6 +64,7 @@ public class Puzzle {
         for (List<Pair> pairs : pairsList) {
             String res = go(i, pairs);
             sb.append(res);
+            //sb.append("\r");
             sb.append("\n");
             i++;
         }
@@ -79,7 +80,7 @@ public class Puzzle {
         List<List<Pair>> newPairs = new ArrayList<>();
 
         for (Pair pair : original) {
-            if (pair.getA().startsWith(pair.getB()) || pair.getB().startsWith(pair.getA()) ) {
+            if (pair.getA().startsWith(pair.getB()) || pair.getB().startsWith(pair.getA())) {
                 if (!pair.getA().equals(pair.getB())) {
                     newPairs.add(new ArrayList<>(Arrays.asList(pair)));
                 }
@@ -109,11 +110,9 @@ public class Puzzle {
                     if (aseq.startsWith(bseq) || bseq.startsWith(aseq)) {
                         if (aseq.equals(bseq)) {
                             results.add(aseq);
-                        } else {
-                            pairs.add(nextPair);
-
-                            newPairs.add(pairs);
                         }
+                        pairs.add(nextPair);
+                        newPairs.add(pairs);
                     }
                 }
 
