@@ -1,12 +1,12 @@
 package com.selbovi;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 
@@ -127,15 +127,38 @@ public class BusinessTest {
     }
 
     @Test
+    @Ignore
     public void resultTestCaseCrack() {
-        List<String> aList = Arrays.asList("is", "a", "sample", "part", "created", "by", "who", "are");
-        List<String> bList = Arrays.asList("i", "sa", "samp", "lepar", "tcreat", "edby", "w", "hoare");
+        List<String> aList = Arrays.asList("is", "a", "sample", "part", "created", "by", "who", "ho", "xx", "are");
+        List<String> bList = Arrays.asList("i", "sa", "samp", "lepar", "tcreat", "edby", "w", "hohox", "x", "hoare");
 
         Set<String> set = Puzzle.go2(toPairs(aList, bList));
 
-        assertTrue(set.contains(aList.stream().collect(Collectors.joining())));
-        assertTrue(set.contains("isa"));
-        assertTrue(set.contains("whoare"));
+        assertTrue(set.containsAll(
+                Arrays.asList(
+                        "isasamplepartcreatedbywhoare",
+                        "samplepartcreatedby",
+                        "samplepartcreatedbywhoareisa",
+                        "isa",
+                        "whoare",
+                        "whoareisa",
+                        "whoareisasamplepartcreatedby",
+                        "samplepartcreatedbywhoare",
+                        "isasamplepartcreatedby",
+                        "whohoxx",
+                        "whohoxxisa",
+                        "isawhohoxx",
+                        "samplepartcreatedbywhoareisawhohohoxx"
 
+//MORE
+                )
+        ));
+
+        ArrayList<List<Puzzle.Pair>> list = new ArrayList<>();
+        list.add(toPairs(aList, bList));
+
+        StringBuilder stringBuilder = Puzzle.executeAndWaitForResult(list);
+
+        assertTrue(stringBuilder.toString().contains("isa"));
     }
 }

@@ -57,7 +57,7 @@ public class Puzzle {
         return result;
     }
 
-    private static StringBuilder executeAndWaitForResult(List<List<Pair>> pairsList) {
+    public static StringBuilder executeAndWaitForResult(List<List<Pair>> pairsList) {
 
         int i = 1;
         StringBuilder sb = new StringBuilder();
