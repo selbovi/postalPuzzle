@@ -127,7 +127,6 @@ public class BusinessTest {
     }
 
     @Test
-    @Ignore
     public void resultTestCaseCrack() {
         List<String> aList = Arrays.asList("is", "a", "sample", "part", "created", "by", "who", "ho", "xx", "are");
         List<String> bList = Arrays.asList("i", "sa", "samp", "lepar", "tcreat", "edby", "w", "hohox", "x", "hoare");
@@ -147,9 +146,7 @@ public class BusinessTest {
                         "isasamplepartcreatedby",
                         "whohoxx",
                         "whohoxxisa",
-                        "isawhohoxx",
-                        "samplepartcreatedbywhoareisawhohohoxx"
-
+                        "isawhohoxx"
 //MORE
                 )
         ));

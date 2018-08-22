@@ -99,20 +99,21 @@ public class Puzzle {
                 leftPairs.removeAll(pairs);
 
                 for (Pair nextPair : leftPairs) {
+                    List<Pair> pairsCopy = new ArrayList<>(pairs);
                     String nextA = nextPair.getA();
                     String nextB = nextPair.getB();
 
                     if (nextA.equals(nextB)) continue;
 
-                    String aseq = pairs.stream().map(Pair::getA).collect(Collectors.joining()) + nextA;
-                    String bseq = pairs.stream().map(Pair::getB).collect(Collectors.joining()) + nextB;
+                    String aseq = pairsCopy.stream().map(Pair::getA).collect(Collectors.joining()) + nextA;
+                    String bseq = pairsCopy.stream().map(Pair::getB).collect(Collectors.joining()) + nextB;
 
                     if (aseq.startsWith(bseq) || bseq.startsWith(aseq)) {
                         if (aseq.equals(bseq)) {
                             results.add(aseq);
                         }
-                        pairs.add(nextPair);
-                        newPairs.add(pairs);
+                        pairsCopy.add(nextPair);
+                        newPairs.add(pairsCopy);
                     }
                 }
 
